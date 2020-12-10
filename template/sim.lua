@@ -2,7 +2,7 @@ local sim = {}
 
 function sim.read(file)
 	local code = {}
-	for l in f:lines(file) do
+	for l in io.lines(file) do
 		table.insert(code, {ins=l:sub(1, 3), value=tonumber(l:sub(5))})
 	end
 
@@ -13,10 +13,10 @@ function sim.read(file)
 	}, {__index=sim})
 end
 
-local sim.instructions = {
+sim.instructions = {
 	nop = function(self, value) end,
-	acc = function(self, value) self.acc = self.acc + value end
-	jmp = function(self, value) self.pc = self.pc + value end
+	acc = function(self, value) self.acc = self.acc + value end,
+	jmp = function(self, value) self.pc = self.pc + value end,
 }
 
 function sim:run(stopOnRevisit, maxInstructions)
@@ -24,7 +24,7 @@ function sim:run(stopOnRevisit, maxInstructions)
 	local ins = 0
 	while self.pc > 0 and self.pc < #self.code do
 		ins = ins + 1
-		if maxInstructions and ins > maxInstruction then
+		if maxInstructions and ins > maxInstructions then
 			break
 		end
 		if stopOnRevisit and visited[self.pc] then
